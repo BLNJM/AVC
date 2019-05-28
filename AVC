@@ -13,9 +13,6 @@ int main()
   int black = 0;
   int red = 0;
   int redcount = 0;
-  int arraycol[320];
-  int arrindex[320];
-  int arraynum[320];
   
   char servadd[15] = "130.195.6.196";
   char message[24] = "Please";
@@ -29,11 +26,15 @@ int main()
   hardware_exchange();
   
   
-  while (redcount <= 1) {
+  while (true) {
 	  take_picture();
 	  
 	  
 		int col = 0;
+		
+		int arraycol[320] = {};
+		int arrindex[320] = {};
+		int arraynum[320] = {};
 		
 		while(col < 320){
 			
@@ -47,78 +48,77 @@ int main()
 				black = 1;
 			}
 			
-			if (black == 1) {
-				arraycol[320] += black;
-			}
-			
-			
-			for (int i = 0; i < arraycol[320]; i++) {
-				arrindex[320] += (i - 160);
-			}
-			for (int i = 0; i < arraycol[320]; i++) {
-				arraynum[320] += (arraycol[i] * arrindex[i]);
-			}
-			
-			for (int i = 0; i < arraynum[320]; i++) {
-				if (arraynum[i] > -10 && arraynum[i] < 10) {
-					//continue straight
-					set_motors(1,40);
-					set_motors(5,56);
-					hardware_exchange();
-				}
-				else if (arraynum[i] < -10 && arraynum[i] > -70) {
-					set_motors(1,40);
-					set_motors(5,53);
-					hardware_exchange();
-					//slight turn
-				}
-				else if (arraynum[i] < -70 && arraynum[i] > -110) {
-					//sharper turn
-					set_motors(1,40);
-					set_motors(5,51);
-					hardware_exchange();
-				}
-				else if (arraynum[i] == 0) {
-					//Reverse robot
-					set_motors(1,56);
-					set_motors(5,40);
-					hardware_exchange();
-				}
-				else if (arraynum[i] < -110) {
-					//turn sharply
-					set_motors(1,40);
-					set_motors(5,48);
-					hardware_exchange();
-				}
-				else if (arraynum[i] > 10 && arraynum[i] < 70) {
-					//turn slightly
-					set_motors(1,43);
-					set_motors(5,56);
-					hardware_exchange();
-				}
-				else if (arraynum[i] > 70 && arraynum[i] < 110) {
-					//sharper turn
-					set_motors(1,45);
-					set_motors(5,56);
-					hardware_exchange();
-				}
-				else if (arraynum[i] > 110) {
-					//turn sharply
-					set_motors(1,48);
-					set_motors(5,56);
-					hardware_exchange();
-				}
-			}
-			if (red > 60) {
-				redcount++;
-			}
-			
-			
-			
+			arraycol[col] = black;
 			col++;
 		}
+			
+		for (int i = 0; i < arraycol[320]; i++) {
+			arrindex[i] == (i - 160);
+		}
+		for (int i = 0; i < arraycol[320]; i++) {
+			arraynum[i] = (arraycol[i] * arrindex[i]);
+		}
 		
+		for (int i = 0; i < arraynum[320]; i++) {
+			if (arraynum[i] >= -10 && arraynum[i] <= 10) {
+				//continue straight
+				set_motors(1,40);
+				set_motors(5,56);
+				hardware_exchange();
+			}
+			else if (arraynum[i] < -10 && arraynum[i] >= -70) {
+				set_motors(1,40);
+				set_motors(5,53);
+				hardware_exchange();
+				//slight turn
+			}
+			else if (arraynum[i] < -70 && arraynum[i] >= -110) {
+				//sharper turn
+				set_motors(1,40);
+				set_motors(5,51);
+				hardware_exchange();
+			}
+			else if (arraynum[i] == 0) {
+				//Reverse robot
+				set_motors(1,56);
+				set_motors(5,40);
+				hardware_exchange();
+			}
+			else if (arraynum[i] < -110) {
+				//turn sharply
+				set_motors(1,40);
+				set_motors(5,48);
+				hardware_exchange();
+			}
+			else if (arraynum[i] > 10 && arraynum[i] <= 70) {
+				//turn slightly
+				set_motors(1,43);
+				set_motors(5,56);
+				hardware_exchange();
+			}
+			else if (arraynum[i] > 70 && arraynum[i] <= 110) {
+				//sharper turn
+				set_motors(1,45);
+				set_motors(5,56);
+				hardware_exchange();
+			}
+			else if (arraynum[i] > 110) {
+				//turn sharply
+				set_motors(1,48);
+				set_motors(5,56);
+				hardware_exchange();
+			}
+		}
+		if (red > 60) {
+			redcount++;
+		}
+			
+			
+			
 	}
-	set_motors(3,30);
-	//Code for section 4 (if we ever do it, which we won't)
+		
+set_motors(3,30);
+hardware_exchange();
+sleep1(500);
+//Code for section 4 (if we ever do it, which we won't)
 }
