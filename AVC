@@ -1,3 +1,5 @@
+
+
 #include <iostream>
 #include "E101.h"
 
@@ -11,114 +13,78 @@ int main()
   cout<<"After init() error="<<err<<endl;
   int white = 0;
   int black = 0;
-  int red = 0;
-  int redcount = 0;
-  
+
   char servadd[15] = "130.195.6.196";
   char message[24] = "Please";
-  
+
   connect_to_server(servadd, 1024);
   send_to_server(message);
   receive_from_server(message);
   send_to_server(message);
-  set_motors(1,31);
-  set_motors(5,64);
+  set_motors(1,56);
+  set_motors(5,32);
   hardware_exchange();
-  
-  
-  while (true) {
-	  take_picture();
-	  
-	  
-		int col = 0;
-		
-		int arraycol[320] = {};
-		int arrindex[320] = {};
-		int arraynum[320] = {};
-		
-		while(col < 320){
-			
-			white = get_pixel(120, col, 3);
-			red = get_pixel(120, col, 1);
+  sleep1(3000);
 
-			if (white > 100) {
-				black = 0;
-			}
-			else {
-				black = 1;
-			}
-			
-			arraycol[col] = black;
-			col++;
-		}
-			
-		for (int i = 0; i < arraycol[320]; i++) {
-			arrindex[i] == (i - 160);
-		}
-		for (int i = 0; i < arraycol[320]; i++) {
-			arraynum[i] = (arraycol[i] * arrindex[i]);
-		}
-		
-		for (int i = 0; i < arraynum[320]; i++) {
-			if (arraynum[i] >= -10 && arraynum[i] <= 10) {
-				//continue straight
-				set_motors(1,40);
-				set_motors(5,56);
-				hardware_exchange();
-			}
-			else if (arraynum[i] < -10 && arraynum[i] >= -70) {
-				set_motors(1,40);
-				set_motors(5,53);
-				hardware_exchange();
-				//slight turn
-			}
-			else if (arraynum[i] < -70 && arraynum[i] >= -110) {
-				//sharper turn
-				set_motors(1,40);
-				set_motors(5,51);
-				hardware_exchange();
-			}
-			else if (arraynum[i] == 0) {
-				//Reverse robot
-				set_motors(1,56);
-				set_motors(5,40);
-				hardware_exchange();
-			}
-			else if (arraynum[i] < -110) {
-				//turn sharply
-				set_motors(1,40);
-				set_motors(5,48);
-				hardware_exchange();
-			}
-			else if (arraynum[i] > 10 && arraynum[i] <= 70) {
-				//turn slightly
-				set_motors(1,43);
-				set_motors(5,56);
-				hardware_exchange();
-			}
-			else if (arraynum[i] > 70 && arraynum[i] <= 110) {
-				//sharper turn
-				set_motors(1,45);
-				set_motors(5,56);
-				hardware_exchange();
-			}
-			else if (arraynum[i] > 110) {
-				//turn sharply
-				set_motors(1,48);
-				set_motors(5,56);
-				hardware_exchange();
-			}
-		}
-		if (red > 60) {
-			redcount++;
-		}
-			
-			
-			
-	}
-		
-set_motors(3,30);
-hardware_exchange();
-sleep1(500);
-//Code for section 4 (if we ever do it, which we won't)
+
+while (true) {
+          take_picture();
+        printf("Photo taken");
+        int  vgo = 0;
+
+                int col = 0;
+
+                int arraycol [320] = {};
+                int arrindex [320] = {};
+                int arraynum [320] = {};
+                int blackTot = 0;
+
+                while(col < 320){
+                        white = get_pixel(120, col, 3);
+
+                        if (white > 100) {
+                                black = 0;
+                        }
+                        else {
+                                black = 1;
+                        }
+                        printf("%d",black);
+                        arraycol[col] = black;
+                        col++;
+                }
+                printf("\n");
+
+                for (int i = 0; i < 319; i++) {
+                        arrindex[i] = (i - 160);
+                }
+                for (int i = 0; i < 319; i++) {
+ 			arraynum[i] = (arraycol[i] * arrindex[i]);
+                }
+
+                for (int i = 0; i < 319; i++) {
+                        blackTot += arraynum[i];
+                }
+                vgo = (int)(blackTot * 0.001);
+                printf("%d\n",vgo);
+
+                if (vgo > 3) {
+                        set_motors(1,(48-vgo));
+                        set_motors(5,48);
+                        hardware_exchange();
+                        printf("right");
+                }
+                else if (vgo <= 3 && vgo >= -3) {
+                        set_motors(1,51);
+                        set_motors(5,45);
+                        hardware_exchange();
+                        printf("straight");
+                }
+                else if (vgo < -3) {
+                        set_motors(1,48);
+                        set_motors(5,(48 + vgo));
+                        hardware_exchange();
+                        printf("left");
+                }
+        }
+
 }
